@@ -1,17 +1,26 @@
-// pages/api/analyze.js
+import { classifyDisability } from '@/app/backend/classifier';
+import { connectDB } from '@/app/lib/db';
+import TestResult from '@/app/models/TestResult';
 
-import { classifyDisability } from "@/app/backend/classifier";
+export async function POST(req) {
+  try {
+    const { studentInfo, features } = await req.json();
 
-export const POST = async(req)=> {
-    try {
-        console.log("inside post api");
-        const features = await req.json();  
-        console.log("Features received:", features);
-      const predictedClass = await classifyDisability(features);  
-        console.log("Predicted class:", predictedClass);
-      return new Response(JSON.stringify({ prediction: predictedClass }),{status: 200});
-    } catch (error) {
-      console.log("Got error",error);
-      return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-    }
-    }
+    await connectDB();
+    console.log("Before prediction");
+    const prediction = await classifyDisability(features);
+    console.log("After prediction", prediction);
+    const testRecord = new TestResult({
+      studentInfo,
+      features,
+      prediction,
+    });
+
+    await testRecord.save();
+
+    return Response.json({ prediction });
+  } catch (err) {
+    console.error('Error analyzing test:', err);
+    return Response.json({ error: 'Something went wrong' }, { status: 500 });
+  }
+}

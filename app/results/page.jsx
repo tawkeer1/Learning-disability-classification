@@ -10,6 +10,11 @@ export default function ResultsPage() {
   useEffect(() => {
     const getPrediction = async () => {
       try {
+        const studentInfo = {
+          name: localStorage.getItem('StudentName') || 'Unknown',
+          enroll: localStorage.getItem('Enroll') || 'Unknown',
+          studyClass: localStorage.getItem('studyClass') || 'Unknown',
+        }
         const features = {
             "Reading Score": Number(localStorage.getItem('Reading Score')) || 0,
             "Math Score": Number(localStorage.getItem('Math Score')) || 0,
@@ -17,14 +22,14 @@ export default function ResultsPage() {
             "Memory Retention": Number(localStorage.getItem('Memory Retention')) || 0,
             "Visual Processing": Number(localStorage.getItem('Visual Processing')) || 0,
             "Verbal Reasoning": Number(localStorage.getItem('Verbal Reasoning')) || 0,
-            "Age": 12, // Static age for now, you can enhance it later
+            "Age": (localStorage.getItem('Age')) || 0,
           };
           
-
+        //api to get prediction
         const response = await fetch('/api/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(features),
+          body: JSON.stringify({ studentInfo, features }),
         });
 
         const data = await response.json();
