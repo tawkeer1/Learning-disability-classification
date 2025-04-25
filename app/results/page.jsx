@@ -102,8 +102,7 @@ export default function ResultsPage() {
           >
             Retake Test
           </button>
-          <div>
-            Based on your test results, we recommend you to check the following materials: 
+          <div> 
             <MaterialsPage/>
           </div>
         </>
