@@ -24,3 +24,12 @@ export async function POST(req) {
     return Response.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }
+export async function GET() {
+  try {
+    await connectDB();
+    const results = await TestResult.find().sort({ createdAt: -1 });
+    return Response.json({ results });
+  } catch (err) {
+    return Response.json({ error: 'Failed to fetch data' }, { status: 500 });
+  }
+}
