@@ -43,7 +43,7 @@ export default function AttentionTest() {
     if (current + 1 < questions.length) {
       setCurrent(current + 1);
     } else {
-      const finalScore = ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100;
+      const finalScore = ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 10;
       localStorage.setItem('Attention Span', finalScore);
       setCompleted(true);
     }

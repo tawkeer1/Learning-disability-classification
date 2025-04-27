@@ -57,7 +57,6 @@ export default function ResultsPage() {
   }, []);
 
   const resetTest = () => {
-    localStorage.clear();
     window.location.href = '/tests/maths'; // redirect to home or start page
   };
 
@@ -92,7 +91,7 @@ export default function ResultsPage() {
           <div className="bg-gray-500 p-4 rounded shadow text-gray-200">
             <h2 className="text-xl font-semibold">🎯 Prediction</h2>
             <p className="text-lg font-bold">
-              {prediction === 0 ? "No learning disability detected" : prediction}
+              {prediction == 0 ? "No learning disability detected" : prediction}
             </p>
           </div>
 

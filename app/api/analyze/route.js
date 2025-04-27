@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { classifyDisability } from '@/app/backend/classifier';
 import { connectDB } from '@/app/lib/db';
 import TestResult from '@/app/models/TestResult';
@@ -8,8 +7,9 @@ export async function POST(req) {
     const { studentInfo, features } = await req.json();
 
     await connectDB();
+    console.log("Before prediction");
     const prediction = await classifyDisability(features);
-
+    console.log("After prediction", prediction);
     const testRecord = new TestResult({
       studentInfo,
       features,
@@ -18,19 +18,18 @@ export async function POST(req) {
 
     await testRecord.save();
 
-    return NextResponse.json({ prediction });
+    return Response.json({ prediction });
   } catch (err) {
     console.error('Error analyzing test:', err);
-    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
+    return Response.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }
-
 export async function GET() {
   try {
     await connectDB();
     const results = await TestResult.find().sort({ createdAt: -1 });
-    return NextResponse.json({ results });
+    return Response.json({ results });
   } catch (err) {
-    return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
+    return Response.json({ error: 'Failed to fetch data' }, { status: 500 });
   }
 }

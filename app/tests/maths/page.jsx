@@ -77,10 +77,7 @@ export default function MathTest() {
         </div>
       ) : (
         <div className="mt-6 p-4 bg-green-100 rounded">
-          <p className="text-xl font-semibold text-green-800">Test Completed!</p>
-          <p className="text-green-700">
-            Your math score: <strong>{(score / questions.length) * 100}</strong>
-          </p>
+          <p className="text-xl font-semibold text-green-800"> Math Test Completed!</p>
           <button
             onClick={() => router.push('/tests/reading')} // next test
             className="mt-4 bg-green-700 text-white px-4 py-2 rounded"

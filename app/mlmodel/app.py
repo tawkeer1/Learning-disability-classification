@@ -4,7 +4,6 @@ import joblib
 import numpy as np
 import os
 
-# Set base directory (folder where this script resides)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Load the trained model and LabelEncoder

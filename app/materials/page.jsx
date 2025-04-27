@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { MATERIALS } from "@/app/lib/constants";
+import StudyMaterialCard from "../cardcompo/Card";
 
 export default function MaterialsPage() {
   const [studentName, setStudentName] = useState("");
@@ -24,21 +25,7 @@ export default function MaterialsPage() {
         Based on your test results, we recommend you to check the following
         materials:
       </h2>
-
-      <ul className="space-y-4">
-        {resources.map((item, index) => (
-          <li key={index} className="bg-white shadow p-4 rounded-lg border">
-            <h3 className="text-lg font-semibold">{item.title}</h3>
-            <a
-              href={item.link}
-              target="_blank"
-              className="text-blue-600 hover:underline"
-            >
-              View Material
-            </a>
-          </li>
-        ))}
-      </ul>
+      <StudyMaterialCard/>
     </div>
   );
 }
