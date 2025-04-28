@@ -61,20 +61,20 @@ const studyMaterials = [
         {studyMaterials.map((material) => (
           <div
             key={material.id}
-            className="bg-white rounded-2xl shadow-md hover:shadow-xl p-6 flex flex-col gap-4 transition duration-300"
+            className="bg-gray-600 rounded-2xl shadow-md hover:shadow-xl p-6 flex flex-col gap-4 transition duration-300"
           >
             <div className="text-xl font-bold text-indigo-600">
               {material.studyMaterialName}
             </div>
-            <div className="text-gray-600 text-sm">
+            <div className="text-gray-400 text-sm">
               Recommended For:{" "}
               <span className="font-semibold">
                 {material.recommendedFor.join(", ")}
               </span>
             </div>
             <div className="text-lg font-semibold">{material.title}</div>
-            <div className="text-gray-700">Author: {material.author}</div>
-            <p className="text-gray-500 text-sm">{material.description}</p>
+            <div className="text-gray-200">Author: {material.author}</div>
+            <p className="text-gray-200 text-sm">{material.description}</p>
           </div>
         ))}
       </div>
