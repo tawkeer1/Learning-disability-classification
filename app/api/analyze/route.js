@@ -7,23 +7,25 @@ export async function POST(req) {
     const { studentInfo, features } = await req.json();
 
     await connectDB();
-    console.log("Before prediction");
-    const prediction = await classifyDisability(features);
-    console.log("After prediction", prediction);
+    const result = await classifyDisability(features);
+    const { prediction, probabilities } = result;
+
     const testRecord = new TestResult({
       studentInfo,
       features,
       prediction,
+      probabilities,
     });
 
     await testRecord.save();
 
-    return Response.json({ prediction });
+    return Response.json({ prediction, probabilities });
   } catch (err) {
-    console.error('Error analyzing test:', err);
-    return Response.json({ error: 'Something went wrong' }, { status: 500 });
+    console.error('Error saving test result:', err);
+    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
 export async function GET() {
   try {
     await connectDB();
@@ -31,5 +33,14 @@ export async function GET() {
     return Response.json({ results });
   } catch (err) {
     return Response.json({ error: 'Failed to fetch data' }, { status: 500 });
+  }
+}
+export async function DELETE() {
+  try {
+    await connectDB();
+    await TestResult.deleteMany({});
+    return Response.json({ message: "All documents deleted" }, { status: 200 });
+  } catch (error) {
+    return Response.json({ error: "Failed to delete documents" }, { status: 500 });
   }
 }

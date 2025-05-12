@@ -6,11 +6,10 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Load the trained model and LabelEncoder
-model = joblib.load(os.path.join(BASE_DIR, 'learning_disability_model.pkl'))
-label_encoder = joblib.load(os.path.join(BASE_DIR, 'label_encoder.pkl'))
+# Load model and MultiLabelBinarizer
+model = joblib.load(os.path.join(BASE_DIR, 'multi_label_model.pkl'))
+mlb = joblib.load(os.path.join(BASE_DIR, 'mlb.pkl'))
 
-# Function to make prediction
 def predict(features):
     try:
         input_array = np.array([
@@ -24,13 +23,23 @@ def predict(features):
         ]).reshape(1, -1)
 
         prediction = model.predict(input_array)
-        predicted_label = label_encoder.inverse_transform(prediction)[0]
+        proba = model.predict_proba(input_array)
 
-        return {"prediction": predicted_label}
+        # Fix: probability of label being 1 (i.e., disability present)
+        probabilities = {
+            mlb.classes_[i]: round(float(proba[i][0][1]) * 100, 2)
+            for i in range(len(mlb.classes_))
+        }
+
+        labels = mlb.inverse_transform(prediction)
+
+        return {
+            "prediction": labels[0] if labels else [],
+            "probabilities": probabilities
+        }
     except Exception as e:
         return {"error": str(e)}
 
-# Entry point
 if __name__ == "__main__":
     try:
         input_data = json.loads(sys.argv[1])

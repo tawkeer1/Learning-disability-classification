@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 
 const TestResultSchema = new mongoose.Schema({
   studentInfo: {
-    name: { type: String, required: true },
-    enroll: { type: String, required: true },
-    studyClass: { type: String, required: true },
+    name: String,
+    enroll: String,
+    studyClass: String,
   },
   features: {
     'Reading Score': Number,
@@ -15,9 +15,10 @@ const TestResultSchema = new mongoose.Schema({
     'Verbal Reasoning': Number,
     'Age': Number,
   },
-  prediction: {
-    type: String,
-    required: true,
+  prediction: [String],
+  probabilities: {
+    type: Map,
+    of: Number, // Each value is a percentage (e.g., 72.5)
   },
   createdAt: {
     type: Date,
@@ -25,4 +26,5 @@ const TestResultSchema = new mongoose.Schema({
   },
 });
 
+// Prevent model overwrite issue in development / hot reload
 export default mongoose.models.TestResult || mongoose.model('TestResult', TestResultSchema);

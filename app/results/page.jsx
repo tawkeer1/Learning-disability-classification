@@ -5,7 +5,8 @@ import MaterialsPage from '../materials/page';
 
 export default function ResultsPage() {
   const [loading, setLoading] = useState(true);
-  const [prediction, setPrediction] = useState(null);
+  const [prediction, setPrediction] = useState([]);
+  const [probabilities, setProbabilities] = useState({});
   const [error, setError] = useState(null);
 
   const [studentInfo, setStudentInfo] = useState({});
@@ -26,7 +27,7 @@ export default function ResultsPage() {
         "Memory Retention": Number(localStorage.getItem('Memory Retention')) || 0,
         "Visual Processing": Number(localStorage.getItem('Visual Processing')) || 0,
         "Verbal Reasoning": Number(localStorage.getItem('Verbal Reasoning')) || 0,
-        "Age": localStorage.getItem('Age') || 0,
+        "Age": Number(localStorage.getItem('Age')) || 0,
       };
 
       setStudentInfo(info);
@@ -42,9 +43,10 @@ export default function ResultsPage() {
         const data = await response.json();
 
         if (data.prediction) {
-          setPrediction(data.prediction);
+          setPrediction(Array.isArray(data.prediction) ? data.prediction : []);
+          setProbabilities(data.probabilities || {});
         } else {
-          setError(data.error || 'Something went wrong');
+          setError(data.error || 'Unexpected response format');
         }
       } catch (err) {
         setError('Failed to get prediction');
@@ -57,7 +59,7 @@ export default function ResultsPage() {
   }, []);
 
   const resetTest = () => {
-    window.location.href = '/tests/maths'; // redirect to home or start page
+    window.location.href = '/tests/maths';
   };
 
   return (
@@ -72,7 +74,7 @@ export default function ResultsPage() {
         </div>
       )}
 
-      {!loading && prediction && (
+      {!loading && !error && (
         <>
           <div className="bg-gray-500 p-4 rounded shadow">
             <h2 className="text-xl font-semibold">👤 Student Info</h2>
@@ -90,9 +92,26 @@ export default function ResultsPage() {
 
           <div className="bg-gray-500 p-4 rounded shadow text-gray-200">
             <h2 className="text-xl font-semibold">🎯 Prediction</h2>
-            <p className="text-lg font-bold">
-              {prediction == 0 ? "No learning disability detected" : prediction}
-            </p>
+            {prediction.length === 0 ? (
+              <p className="text-lg font-bold">No learning disability detected</p>
+            ) : (
+              <ul className="list-disc pl-6">
+                {prediction.map((label, idx) => (
+                  <li key={idx} className="text-lg font-bold">{label}</li>
+                ))}
+              </ul>
+            )}
+
+            {Object.keys(probabilities).length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold">Confidence Scores:</h3>
+                <ul className="list-disc pl-6">
+                  {Object.entries(probabilities).map(([label, percent]) => (
+                    <li key={label}>{label}: {percent}%</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           <button
@@ -101,8 +120,9 @@ export default function ResultsPage() {
           >
             Retake Test
           </button>
-          <div> 
-            <MaterialsPage/>
+
+          <div>
+            <MaterialsPage />
           </div>
         </>
       )}

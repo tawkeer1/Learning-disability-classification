@@ -2,6 +2,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StudentsPage from "./studentTable/page";
 import Link from "next/link";
+import { connectDB } from "./lib/db";
+import TestResult from "./models/TestResult";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +29,7 @@ export default function RootLayout({ children }) {
         <Link href="/studentTable" className="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded mb-10">
           Previous test results
         </Link>
+        
         {children}
       </body>
     </html>

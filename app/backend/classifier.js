@@ -24,7 +24,11 @@ export const classifyDisability = (features) => {
       try {
         const result = JSON.parse(output);
         if (result.error) return reject(result.error);
-        resolve(result.prediction);
+        // Return both prediction and probabilities
+        resolve({
+          prediction: result.prediction,
+          probabilities: result.probabilities || {},
+        });
       } catch (err) {
         reject("Invalid response from Python script");
       }
