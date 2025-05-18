@@ -26,19 +26,18 @@ def preprocess(features):
     family_history = 1 if str(features.get("Family History", "")).lower() == "yes" else 0
 
     return [
-        features.get("Reading Score", 0),
-        features.get("Math Score", 0),
+        features.get("Age", 0),
+        gender,
+        sleep_quality,
         features.get("Attention Span", 0),
         features.get("Memory Retention", 0),
         features.get("Visual Processing", 0),
+        features.get("Reading Score", 0),
+        features.get("Math Score", 0),
         features.get("Verbal Reasoning", 0),
-        features.get("Age", 0),
-        sleep_quality,
         features.get("Spelling Accuracy", 0),
-        family_history,
-        gender
+        family_history
     ]
-
 
 # Prediction function
 def predict(features):
@@ -48,27 +47,27 @@ def predict(features):
 
         for model_name, model in models.items():
             pred = model.predict(input_array)
-            
             probabilities = {}
 
-            # Check if model supports predict_proba
             if hasattr(model, "predict_proba"):
                 probas = model.predict_proba(input_array)
 
-                # For multilabel classifiers, predict_proba returns a list of arrays (one per label)
                 if isinstance(probas, list):
-                    # probas[i] shape: (n_samples, 2) for label i
                     for i, label in enumerate(mlb.classes_):
-                        prob_pos = probas[i][0][1]  # probability of class 1 for first sample
+                        estimator = model.estimators_[i]
+                        classes = estimator.classes_
+
+                        if 1 in classes:
+                            pos_index = list(classes).index(1)
+                            prob_pos = probas[i][0][pos_index]
+                        else:
+                            prob_pos = 0.0  # Default to 0% if class 1 not present
+
                         probabilities[label] = round(float(prob_pos) * 100, 2)
                 else:
-                    # For multi-class classifiers (not multilabel), probas shape: (n_samples, n_classes)
-                    # Map each class to its probability
                     for i, label in enumerate(mlb.classes_):
-                        prob = probas[0][i]
-                        probabilities[label] = round(float(prob) * 100, 2)
+                        probabilities[label] = round(float(probas[0][i]) * 100, 2)
             else:
-                # Model does not support predict_proba
                 for label in mlb.classes_:
                     probabilities[label] = None
 
@@ -83,7 +82,6 @@ def predict(features):
 
     except Exception as e:
         return {"error": str(e)}
-
 
 # Entry point for subprocess call
 if __name__ == "__main__":

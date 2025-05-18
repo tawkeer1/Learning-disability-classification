@@ -7,10 +7,10 @@ export async function POST(req) {
     const { studentInfo, features } = await req.json();
 
     await connectDB();
-
+    console.log(features);
     // Get predictions from Python script
     const predictions = await classifyDisability(features);
-
+    console.log(predictions);
     // Save everything in MongoDB
     const testRecord = new TestResult({
       studentInfo,

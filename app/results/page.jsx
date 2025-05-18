@@ -31,7 +31,7 @@ export default function ResultsPage() {
         "Spelling Accuracy":
           Number(localStorage.getItem("Spelling Accuracy")) || 0,
         "Age": Number(localStorage.getItem("Age")) || 0,
-        "Sleep Quality": Number(localStorage.getItem("Sleep Quality")) || 0,
+        "Sleep Quality": localStorage.getItem("Sleep Quality") || "Poor",
         "Gender": localStorage.getItem('Gender') || 'Male', // Capitalized 'Male'
 "Family History": localStorage.getItem('Family History') || 'No', // Capitalized 'No'
 

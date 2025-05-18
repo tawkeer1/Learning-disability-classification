@@ -16,7 +16,7 @@ const TestResultSchema = new mongoose.Schema({
     'Spelling Accuracy': { type: Number, required: true },
     'Age': { type: Number, required: true },
     'Gender': { type: String, enum: ['Male', 'Female'], required: true },
-    'Sleep Quality': { type: Number, enum: [0, 1, 2], required: true }, // 0 = Poor, 1 = Average, 2 = Good
+    'Sleep Quality': { type: String, enum: ["Poor", "Average", "Good"], required: true }, // 0 = Poor, 1 = Average, 2 = Good
     'Family History': { type: String, enum: ['Yes', 'No'], required: true },
   },
   predictions: {

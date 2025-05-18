@@ -39,7 +39,7 @@ export default function VisualTest() {
       setCurrent(current + 1);
     } else {
       setCompleted(true);
-      localStorage.setItem('Visual Processing', ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100);
+      localStorage.setItem('Visual Processing', Math.round((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100);
     }
   };
 

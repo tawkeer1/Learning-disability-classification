@@ -107,11 +107,17 @@ export default function StudentsPage() {
                 : "None"}
             </td>
             <td className="border px-3 py-2">
-              {modelResult.probabilities?.ADHD ?? "-"}
-            </td>
-            <td className="border px-3 py-2">
-              {modelResult.probabilities?.Dyslexia ?? "-"}
-            </td>
+  {modelResult.probabilities
+    ? modelResult.probabilities["ADHD"] ?? modelResult.probabilities["adhd"] ?? "-"
+    : "-"}
+</td>
+
+<td className="border px-3 py-2">
+  {modelResult.probabilities
+    ? modelResult.probabilities["Dyslexia"] ?? modelResult.probabilities["dyslexia"] ?? "-"
+    : "-"}
+</td>
+
           </tr>
         ))
       : null

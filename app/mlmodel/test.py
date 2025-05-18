@@ -1,97 +1,97 @@
 import pandas as pd
-import numpy as np
+import random
 
-# Random generator
-rng = np.random.default_rng(seed=42)
+def generate_sample():
+    age = random.randint(7, 16)
+    gender = random.choice(["Male", "Female"])
+    sleep_quality = random.choice(["Poor", "Average", "Good"])
+    family_history = random.choice([0, 1])  # 0 = No, 1 = Yes
 
-# Total desired samples
-total_samples = 3000
+    sleep_map = {
+        "Poor": random.randint(30, 50),
+        "Average": random.randint(51, 75),
+        "Good": random.randint(76, 100)
+    }
+    sleep_score = sleep_map[sleep_quality]
 
-# Define disability classes and desired uneven distribution
-class_distribution = {
-    'None': 1000,
-    'ADHD': 600,
-    'Dysgraphia': 500,
-    'Dyslexia': 450,
-    'Dyscalculia': 350,
-    'Auditory Processing Disorder': 100
-}
+    attention_span = random.randint(20, 90)
+    memory_retention = random.randint(20, 90)
+    visual_processing = random.randint(20, 90)
+    reading_score = random.randint(20, 100)
+    math_score = random.randint(20, 100)
+    verbal_reasoning = random.randint(20, 100)
+    spelling_accuracy = random.randint(20, 100)
 
-# Ensure the total matches
-assert sum(class_distribution.values()) == total_samples, "Class sizes must sum to 3000"
+    # --- Diagnosis rules ---
+    adhd_score = 0
+    dyslexia_score = 0
 
-# Class-specific distributions (same as before)
-distribution_params = {
-    'None': {
-        'Reading Score': (75, 10),
-        'Math Score': (75, 10),
-        'Attention Span': (70, 8),
-        'Memory Retention': (70, 10),
-        'Visual Processing': (75, 8),
-        'Verbal Reasoning': (75, 10)
-    },
-    'ADHD': {
-        'Reading Score': (65, 12),
-        'Math Score': (65, 12),
-        'Attention Span': (40, 12),
-        'Memory Retention': (60, 10),
-        'Visual Processing': (65, 10),
-        'Verbal Reasoning': (68, 9)
-    },
-    'Dysgraphia': {
-        'Reading Score': (65, 10),
-        'Math Score': (68, 10),
-        'Attention Span': (60, 10),
-        'Memory Retention': (65, 10),
-        'Visual Processing': (50, 12),
-        'Verbal Reasoning': (60, 10)
-    },
-    'Dyslexia': {
-        'Reading Score': (50, 12),
-        'Math Score': (70, 10),
-        'Attention Span': (60, 10),
-        'Memory Retention': (55, 10),
-        'Visual Processing': (60, 10),
-        'Verbal Reasoning': (50, 10)
-    },
-    'Dyscalculia': {
-        'Reading Score': (70, 10),
-        'Math Score': (45, 12),
-        'Attention Span': (60, 10),
-        'Memory Retention': (55, 10),
-        'Visual Processing': (65, 10),
-        'Verbal Reasoning': (65, 10)
-    },
-    'Auditory Processing Disorder': {
-        'Reading Score': (65, 10),
-        'Math Score': (65, 10),
-        'Attention Span': (60, 10),
-        'Memory Retention': (55, 10),
-        'Visual Processing': (60, 10),
-        'Verbal Reasoning': (45, 10)
-    },
-}
+    # ADHD factors
+    if attention_span < 40:
+        adhd_score += 2
+    elif attention_span < 60:
+        adhd_score += 1
 
-# Function to generate class-specific data
-def generate_class_data(cls, n):
-    params = distribution_params[cls]
-    return pd.DataFrame({
-        'Reading Score': rng.normal(*params['Reading Score'], size=n).clip(0, 100),
-        'Math Score': rng.normal(*params['Math Score'], size=n).clip(0, 100),
-        'Attention Span': rng.normal(*params['Attention Span'], size=n).clip(0, 100),
-        'Memory Retention': rng.normal(*params['Memory Retention'], size=n).clip(0, 100),
-        'Visual Processing': rng.normal(*params['Visual Processing'], size=n).clip(0, 100),
-        'Verbal Reasoning': rng.normal(*params['Verbal Reasoning'], size=n).clip(0, 100),
-        'Age': rng.integers(7, 18, size=n),
-        'Disability': [cls] * n
-    })
+    if sleep_score < 50:
+        adhd_score += 1
+    if memory_retention < 50:
+        adhd_score += 1
+    if family_history and random.random() < 0.5:
+        adhd_score += 1
+    if age < 10 and attention_span < 45:
+        adhd_score += 1
 
-# Generate and combine all class data
-df_list = [generate_class_data(cls, n) for cls, n in class_distribution.items()]
-synthetic_df = pd.concat(df_list, ignore_index=True).sample(frac=1, random_state=42).reset_index(drop=True)
+    # Dyslexia factors
+    if reading_score < 50:
+        dyslexia_score += 2
+    elif reading_score < 60:
+        dyslexia_score += 1
 
-# Save to CSV (optional)
-synthetic_df.to_csv("learning_disability_dataset.csv", index=False)
+    if spelling_accuracy < 55:
+        dyslexia_score += 1
+    if verbal_reasoning < 60:
+        dyslexia_score += 1
+    if visual_processing < 50:
+        dyslexia_score += 1
+    if family_history and random.random() < 0.5:
+        dyslexia_score += 1
 
-# Print class distribution
-print(synthetic_df['Disability'].value_counts())
+    # Diagnosis thresholds
+    adhd = adhd_score >= 3
+    dyslexia = dyslexia_score >= 3
+
+    # Final label
+    label = "None"
+    if adhd and dyslexia:
+        label = "ADHD, Dyslexia"
+    elif adhd:
+        label = "ADHD"
+    elif dyslexia:
+        label = "Dyslexia"
+
+    return {
+        "Age": age,
+        "Gender": gender,
+        "Sleep Quality": sleep_quality,
+        "Attention Span": attention_span,
+        "Memory Retention": memory_retention,
+        "Visual Processing": visual_processing,
+        "Reading Score": reading_score,
+        "Math Score": math_score,
+        "Verbal Reasoning": verbal_reasoning,
+        "Spelling Accuracy": float(spelling_accuracy),
+        "Family History": family_history,
+        "Labels": label
+    }
+
+
+# Generate 1000 samples
+data = [generate_sample() for _ in range(1000)]
+df = pd.DataFrame(data)
+
+# Preview label counts
+print("Label distribution:\n", df['Labels'].value_counts())
+
+# Save dataset
+df.to_csv("clean_realistic_dataset.csv", index=False)
+print("Dataset saved as clean_realistic_dataset.csv")

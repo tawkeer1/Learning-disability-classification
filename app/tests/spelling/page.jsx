@@ -39,7 +39,10 @@ export default function SpellingTest() {
       setCurrent(current + 1);
     } else {
       setCompleted(true);
-      localStorage.setItem('Spelling Accuracy', ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100);
+      localStorage.setItem(
+        'Spelling Accuracy',
+        Math.round(((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100)
+      );      
     }
   };
 
@@ -76,10 +79,10 @@ export default function SpellingTest() {
         <div className="mt-6 p-4 bg-green-100 rounded">
           <p className="text-xl font-semibold text-green-800">Spelling Test Completed!</p>
           <button
-            onClick={() => router.push('/results')}
+            onClick={() => router.push('/tests/other-info')}
             className="mt-4 bg-green-700 text-white px-4 py-2 rounded"
           >
-            Go to results
+            Enter other info
           </button>
         </div>
       )}
