@@ -5,19 +5,19 @@ import { useRouter } from 'next/navigation';
 
 const questions = [
   {
-    question: "Which shape has 3 sides?",
-    options: ["Square", "Circle", "Triangle", "Rectangle"],
-    answer: "Triangle",
+    question: "Which shape is different from the others: ◼︎, ◼︎, ●, ◼︎",
+    options: ["◼︎", "●", "None", "All are same"],
+    answer: "●",
   },
   {
-    question: "Which image completes the pattern? 🔴🟢🔴🟢___",
-    options: ["🔴", "🟢", "🟡", "🔵"],
-    answer: "🔴",
+    question: "If a triangle has 3 sides, how many sides does a square have?",
+    options: ["3", "5", "4", "6"],
+    answer: "4",
   },
   {
-    question: "Which is the mirror image of the letter 'b'?",
-    options: ["d", "p", "q", "g"],
-    answer: "d",
+    question: "Which direction is opposite to East?",
+    options: ["North", "West", "South", "East"],
+    answer: "West",
   },
 ];
 
@@ -38,9 +38,8 @@ export default function VisualTest() {
     if (current + 1 < questions.length) {
       setCurrent(current + 1);
     } else {
-      const finalScore = ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 10;
-      localStorage.setItem('Visual Processing', finalScore);
       setCompleted(true);
+      localStorage.setItem('Visual Processing', ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100);
     }
   };
 
@@ -75,10 +74,7 @@ export default function VisualTest() {
         </div>
       ) : (
         <div className="mt-6 p-4 bg-green-100 rounded">
-          <p className="text-xl font-semibold text-green-800">Test Completed!</p>
-          <p className="text-green-700">
-            Your visual processing score has been saved.
-          </p>
+          <p className="text-xl font-semibold text-green-800">Visual Test Completed!</p>
           <button
             onClick={() => router.push('/tests/verbal')}
             className="mt-4 bg-green-700 text-white px-4 py-2 rounded"

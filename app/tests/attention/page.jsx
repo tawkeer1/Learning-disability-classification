@@ -4,26 +4,21 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const questions = [
-    {
-        question: "What is 15 + 28?",
-        options: ["43", "33", "45", "53"],
-        answer: "43",
-      },
-      {
-        question: "What is 9 × 6?",
-        options: ["54", "56", "48", "63"],
-        answer: "54",
-      },
-      {
-        question: "If you have 3 apples and get 5 more, how many do you have?",
-        options: ["7", "9", "8", "6"],
-        answer: "8",
-      },
-      {
-        question: "What is 100 ÷ 4?",
-        options: ["20", "25", "30", "24"],
-        answer: "25",
-      }
+  {
+    question: "Select the number 7 in this sequence: 3, 5, 2, 7, 9, 1",
+    options: ["3", "7", "2", "5"],
+    answer: "7",
+  },
+  {
+    question: "Find the odd one out: cat, dog, apple, horse",
+    options: ["dog", "cat", "apple", "horse"],
+    answer: "apple",
+  },
+  {
+    question: "What letter comes after 'C'?",
+    options: ["B", "D", "E", "A"],
+    answer: "D",
+  },
 ];
 
 export default function AttentionTest() {
@@ -43,15 +38,14 @@ export default function AttentionTest() {
     if (current + 1 < questions.length) {
       setCurrent(current + 1);
     } else {
-      const finalScore = ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 10;
-      localStorage.setItem('Attention Span', finalScore);
       setCompleted(true);
+      localStorage.setItem('Attention Span', ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100);
     }
   };
 
   return (
     <div className="max-w-xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Attention Test</h2>
+      <h2 className="text-2xl font-bold mb-4">Attention Span Test</h2>
 
       {!completed ? (
         <div>
@@ -80,10 +74,7 @@ export default function AttentionTest() {
         </div>
       ) : (
         <div className="mt-6 p-4 bg-green-100 rounded">
-          <p className="text-xl font-semibold text-green-800">Test Completed!</p>
-          <p className="text-green-700">
-            Your attention span score has been saved.
-          </p>
+          <p className="text-xl font-semibold text-green-800">Attention Test Completed!</p>
           <button
             onClick={() => router.push('/tests/memory')}
             className="mt-4 bg-green-700 text-white px-4 py-2 rounded"

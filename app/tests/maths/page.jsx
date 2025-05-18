@@ -38,9 +38,9 @@ export default function MathTest() {
     if (current + 1 < questions.length) {
       setCurrent(current + 1);
     } else {
+      const finalScore = ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100;
+      localStorage.setItem('Math Score', finalScore);
       setCompleted(true);
-      // You can store this score globally or in localStorage for final API call
-      localStorage.setItem('Math Score', ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100);
     }
   };
 
@@ -50,9 +50,7 @@ export default function MathTest() {
 
       {!completed ? (
         <div>
-          <p className="text-lg font-medium mb-2">
-            {questions[current].question}
-          </p>
+          <p className="text-lg font-medium mb-2">{questions[current].question}</p>
           <div className="space-y-2">
             {questions[current].options.map((opt, index) => (
               <button
@@ -66,7 +64,6 @@ export default function MathTest() {
               </button>
             ))}
           </div>
-
           <button
             onClick={handleNext}
             className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -77,9 +74,9 @@ export default function MathTest() {
         </div>
       ) : (
         <div className="mt-6 p-4 bg-green-100 rounded">
-          <p className="text-xl font-semibold text-green-800"> Math Test Completed!</p>
+          <p className="text-xl font-semibold text-green-800">Math Test Completed!</p>
           <button
-            onClick={() => router.push('/tests/reading')} // next test
+            onClick={() => router.push('/tests/reading')}
             className="mt-4 bg-green-700 text-white px-4 py-2 rounded"
           >
             Continue to Reading Test

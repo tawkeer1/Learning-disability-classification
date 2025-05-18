@@ -5,23 +5,23 @@ import { useRouter } from 'next/navigation';
 
 const questions = [
   {
-    question: "Which word is a synonym for 'Happy'?",
-    options: ["Sad", "Joyful", "Angry", "Tired"],
-    answer: "Joyful",
+    question: "Choose the correct spelling:",
+    options: ["Definately", "Definitely", "Defenetly", "Definitly"],
+    answer: "Definitely",
   },
   {
-    question: "Which word best completes the sentence: 'He ___ the ball into the goal.'",
-    options: ["kicked", "kick", "kicking", "kicks"],
-    answer: "kicked",
+    question: "Choose the correct spelling:",
+    options: ["Accomodate", "Acommodate", "Accommodate", "Acomodete"],
+    answer: "Accommodate",
   },
   {
-    question: "Choose the antonym of 'Hot'.",
-    options: ["Warm", "Cold", "Boiling", "Dry"],
-    answer: "Cold",
+    question: "Choose the correct spelling:",
+    options: ["Recieve", "Receive", "Receeve", "Recive"],
+    answer: "Receive",
   },
 ];
 
-export default function VerbalTest() {
+export default function SpellingTest() {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
@@ -39,13 +39,13 @@ export default function VerbalTest() {
       setCurrent(current + 1);
     } else {
       setCompleted(true);
-      localStorage.setItem('Verbal Reasoning', ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100);
+      localStorage.setItem('Spelling Accuracy', ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100);
     }
   };
 
   return (
     <div className="max-w-xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Verbal Reasoning Test</h2>
+      <h2 className="text-2xl font-bold mb-4">Spelling Accuracy Test</h2>
 
       {!completed ? (
         <div>
@@ -74,12 +74,12 @@ export default function VerbalTest() {
         </div>
       ) : (
         <div className="mt-6 p-4 bg-green-100 rounded">
-          <p className="text-xl font-semibold text-green-800">Verbal Test Completed!</p>
+          <p className="text-xl font-semibold text-green-800">Spelling Test Completed!</p>
           <button
-            onClick={() => router.push('/tests/spelling')}
+            onClick={() => router.push('/results')}
             className="mt-4 bg-green-700 text-white px-4 py-2 rounded"
           >
-            Go to Spelling test
+            Go to results
           </button>
         </div>
       )}

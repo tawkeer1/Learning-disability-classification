@@ -2,23 +2,26 @@ import mongoose from 'mongoose';
 
 const TestResultSchema = new mongoose.Schema({
   studentInfo: {
-    name: String,
-    enroll: String,
-    studyClass: String,
+    name: { type: String, required: true },
+    enroll: { type: String, required: true },
+    studyClass: { type: String, required: true },
   },
   features: {
-    'Reading Score': Number,
-    'Math Score': Number,
-    'Attention Span': Number,
-    'Memory Retention': Number,
-    'Visual Processing': Number,
-    'Verbal Reasoning': Number,
-    'Age': Number,
+    'Reading Score': { type: Number, required: true },
+    'Math Score': { type: Number, required: true },
+    'Attention Span': { type: Number, required: true },
+    'Memory Retention': { type: Number, required: true },
+    'Visual Processing': { type: Number, required: true },
+    'Verbal Reasoning': { type: Number, required: true },
+    'Spelling Accuracy': { type: Number, required: true },
+    'Age': { type: Number, required: true },
+    'Gender': { type: String, enum: ['Male', 'Female'], required: true },
+    'Sleep Quality': { type: Number, enum: [0, 1, 2], required: true }, // 0 = Poor, 1 = Average, 2 = Good
+    'Family History': { type: String, enum: ['Yes', 'No'], required: true },
   },
-  prediction: [String],
-  probabilities: {
-    type: Map,
-    of: Number, // Each value is a percentage (e.g., 72.5)
+  predictions: {
+    type: mongoose.Schema.Types.Mixed, // Contains model-wise predictions and probabilities
+    default: {},
   },
   createdAt: {
     type: Date,
@@ -26,5 +29,5 @@ const TestResultSchema = new mongoose.Schema({
   },
 });
 
-// Prevent model overwrite issue in development / hot reload
+// Prevent model overwrite during hot reloads in development
 export default mongoose.models.TestResult || mongoose.model('TestResult', TestResultSchema);

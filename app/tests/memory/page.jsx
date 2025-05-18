@@ -5,19 +5,19 @@ import { useRouter } from 'next/navigation';
 
 const questions = [
   {
-    question: "Remember this: 7, 3, 9. What was the second number?",
-    options: ["7", "3", "9", "6"],
-    answer: "3",
+    question: "Remember this sequence: 5, 8, 3. What was the second number?",
+    options: ["3", "8", "5", "2"],
+    answer: "8",
   },
   {
-    question: "Which of these was NOT in the list: apple, banana, chair, orange?",
-    options: ["apple", "banana", "chair", "orange"],
-    answer: "chair",
+    question: "You read: 'Sarah went to the park, then bought ice cream and went home.' What did she do after the park?",
+    options: ["Went home", "Bought ice cream", "Went to school", "Took a nap"],
+    answer: "Bought ice cream",
   },
   {
-    question: "What comes next: A, B, C, ___?",
-    options: ["E", "F", "D", "G"],
-    answer: "D",
+    question: "You see: Tree, Car, Apple. Which one was not listed?",
+    options: ["Apple", "House", "Car", "Tree"],
+    answer: "House",
   },
 ];
 
@@ -38,15 +38,14 @@ export default function MemoryTest() {
     if (current + 1 < questions.length) {
       setCurrent(current + 1);
     } else {
-      const finalScore = ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 10;
-      localStorage.setItem('Memory Retention', finalScore);
       setCompleted(true);
+      localStorage.setItem('Memory Retention', ((score + (selected === questions[current].answer ? 1 : 0)) / questions.length) * 100);
     }
   };
 
   return (
     <div className="max-w-xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Memory Test</h2>
+      <h2 className="text-2xl font-bold mb-4">Memory Retention Test</h2>
 
       {!completed ? (
         <div>
@@ -75,15 +74,12 @@ export default function MemoryTest() {
         </div>
       ) : (
         <div className="mt-6 p-4 bg-green-100 rounded">
-          <p className="text-xl font-semibold text-green-800">Test Completed!</p>
-          <p className="text-green-700">
-            Your memory score has been saved.
-          </p>
+          <p className="text-xl font-semibold text-green-800">Memory Test Completed!</p>
           <button
             onClick={() => router.push('/tests/visual')}
             className="mt-4 bg-green-700 text-white px-4 py-2 rounded"
           >
-            Continue to Visual Test
+            Continue to Visual Processing Test
           </button>
         </div>
       )}
