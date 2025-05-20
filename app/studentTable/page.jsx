@@ -108,7 +108,7 @@ export default function StudentsPage() {
             </td>
             <td className="border px-3 py-2">
   {modelResult.probabilities
-    ? modelResult.probabilities["ADHD"] ?? modelResult.probabilities["adhd"] ?? "-"
+    ? modelResult.probabilities["Adhd"] ?? modelResult.probabilities["adhd"] ?? "-"
     : "-"}
 </td>
 

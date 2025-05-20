@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import MaterialsPage from "../materials/page";
+import FeatureImportanceChart from "../FeautureImp/FeatureImportanceChart";
 
 export default function ResultsPage() {
   const [loading, setLoading] = useState(true);
@@ -135,7 +136,7 @@ export default function ResultsPage() {
           >
             🔄 Retake Test
           </button>
-
+          <FeatureImportanceChart />
           {/* Personalized Materials */}
           <div>
             <MaterialsPage />

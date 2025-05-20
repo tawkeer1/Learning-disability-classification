@@ -86,9 +86,27 @@ def predict(features):
 # Entry point for subprocess call
 if __name__ == "__main__":
     try:
-        input_data = json.loads(sys.argv[1])
-        result = predict(input_data)
-        print(json.dumps(result))
+        args = json.loads(sys.argv[1])
+
+        if args.get("explain"):
+            # Return feature importances from RandomForest
+            rf_model = models.get("random_forest")
+            if rf_model is not None and hasattr(rf_model.estimators_[0], "feature_importances_"):
+                feature_names = [
+                    "Age", "Gender", "Sleep Quality", "Attention Span", "Memory Retention",
+                    "Visual Processing", "Reading Score", "Math Score", "Verbal Reasoning",
+                    "Spelling Accuracy", "Family History"
+                ]
+                importances = rf_model.estimators_[0].feature_importances_
+                result = dict(zip(feature_names, importances))
+                print(json.dumps({"feature_importances": result}))
+            else:
+                print(json.dumps({"error": "RandomForest model not available or unsupported"}))
+        else:
+            result = predict(args)
+            print(json.dumps(result))
+
     except Exception as e:
         print(json.dumps({"error": str(e)}))
         sys.exit(1)
+
