@@ -23,6 +23,10 @@ const TestResultSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Mixed, // Contains model-wise predictions and probabilities
     default: {},
   },
+  finalPrediction: {
+    type: [String], // e.g., ["ADHD"]
+    default: [],
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -7,17 +7,11 @@ export default function StudentsPage() {
 
   const deleteAllEntries = async () => {
     try {
-      console.log("Deleting all entries...");
       const res = await fetch("/api/analyze", { method: "DELETE" });
       const data = await res.json();
-      if (data.message) {
-        console.log(data.message);
-        setRecords([]); // clear UI
-      } else {
-        console.error("Failed to delete entries");
-      }
+      if (data.message) setRecords([]);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -43,7 +37,7 @@ export default function StudentsPage() {
 
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-600 text-sm">
-          <thead className="bg-gray-500">
+          <thead className="bg-gray-500 text-white">
             <tr>
               <th className="border px-3 py-2">Name</th>
               <th className="border px-3 py-2">Enroll</th>
@@ -59,71 +53,79 @@ export default function StudentsPage() {
               <th className="border px-3 py-2">Prediction</th>
               <th className="border px-3 py-2">ADHD (%)</th>
               <th className="border px-3 py-2">Dyslexia (%)</th>
+              <th className="border px-3 py-2">Final Prediction</th>
             </tr>
           </thead>
           <tbody>
-  {records.map((rec, index) =>
-    rec.predictions
-      ? Object.entries(rec.predictions).map(([modelName, modelResult], i) => (
-          <tr key={`${index}-${modelName}`} className="text-center">
-            {i === 0 && (
-              <>
-                <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
-                  {rec.studentInfo.name}
-                </td>
-                <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
-                  {rec.studentInfo.enroll}
-                </td>
-                <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
-                  {rec.studentInfo.studyClass}
-                </td>
-                <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
-                  {rec.features["Age"]}
-                </td>
-                <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
-                  {rec.features["Reading Score"]}
-                </td>
-                <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
-                  {rec.features["Math Score"]}
-                </td>
-                <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
-                  {rec.features["Attention Span"]}
-                </td>
-                <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
-                  {rec.features["Memory Retention"]}
-                </td>
-                <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
-                  {rec.features["Visual Processing"]}
-                </td>
-                <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
-                  {rec.features["Verbal Reasoning"]}
-                </td>
-              </>
+            {records.map((rec, index) =>
+              rec.predictions
+                ? Object.entries(rec.predictions).map(([modelName, modelResult], i) => (
+                    <tr key={`${index}-${modelName}`} className="text-center">
+                      {i === 0 && (
+                        <>
+                          <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
+                            {rec.studentInfo.name}
+                          </td>
+                          <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
+                            {rec.studentInfo.enroll}
+                          </td>
+                          <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
+                            {rec.studentInfo.studyClass}
+                          </td>
+                          <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
+                            {rec.features["Age"]}
+                          </td>
+                          <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
+                            {rec.features["Reading Score"]}
+                          </td>
+                          <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
+                            {rec.features["Math Score"]}
+                          </td>
+                          <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
+                            {rec.features["Attention Span"]}
+                          </td>
+                          <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
+                            {rec.features["Memory Retention"]}
+                          </td>
+                          <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
+                            {rec.features["Visual Processing"]}
+                          </td>
+                          <td className="border px-3 py-2" rowSpan={Object.keys(rec.predictions).length}>
+                            {rec.features["Verbal Reasoning"]}
+                          </td>
+                        </>
+                      )}
+                      <td className="border px-3 py-2 font-medium">{modelName}</td>
+                      <td className="border px-3 py-2">
+                        {Array.isArray(modelResult?.prediction) && modelResult.prediction.length > 0
+                          ? modelResult.prediction.join(", ")
+                          : "None"}
+                      </td>
+                      <td className="border px-3 py-2">
+                        {modelResult?.probabilities?.Adhd ??
+                          modelResult?.probabilities?.adhd ?? "-"}
+                      </td>
+                      <td className="border px-3 py-2">
+                        {modelResult?.probabilities?.Dyslexia ??
+                          modelResult?.probabilities?.dyslexia ?? "-"}
+                      </td>
+                      {i === 0 && (
+                        <td
+                        className="border px-3 py-2"
+                        rowSpan={Object.keys(rec.predictions).length}
+                      >
+                        {Array.isArray(rec.finalPrediction)
+                          ? rec.finalPrediction.join(", ")
+                          : typeof rec.finalPrediction === "string" && rec.finalPrediction.trim() !== ""
+                          ? rec.finalPrediction
+                          : "None"}
+                      </td>
+                      )}
+                    </tr>
+                  ))
+                : null
             )}
-            <td className="border px-3 py-2 font-medium">{modelName}</td>
-            <td className="border px-3 py-2">
-              {modelResult.prediction.length > 0
-                ? modelResult.prediction.join(", ")
-                : "None"}
-            </td>
-            <td className="border px-3 py-2">
-  {modelResult.probabilities
-    ? modelResult.probabilities["Adhd"] ?? modelResult.probabilities["adhd"] ?? "-"
-    : "-"}
-</td>
-
-<td className="border px-3 py-2">
-  {modelResult.probabilities
-    ? modelResult.probabilities["Dyslexia"] ?? modelResult.probabilities["dyslexia"] ?? "-"
-    : "-"}
-</td>
-
-          </tr>
-        ))
-      : null
-  )}
-</tbody>
-
+          </tbody>
         </table>
       </div>
     </div>

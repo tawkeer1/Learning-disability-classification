@@ -8,19 +8,26 @@ export async function POST(req) {
 
     await connectDB();
     console.log(features);
+
     // Get predictions from Python script
-    const predictions = await classifyDisability(features);
+    const { finalPrediction, ...predictions } = await classifyDisability(features);
     console.log(predictions);
+
     // Save everything in MongoDB
     const testRecord = new TestResult({
       studentInfo,
       features,
-      predictions, // Contains model-wise prediction + probabilities
+      predictions, // Save full predictions
+      finalPrediction
     });
 
     await testRecord.save();
 
-    return Response.json(predictions);
+      return Response.json({
+      predictions,
+      finalPrediction,
+      results: testRecord,
+    });
   } catch (err) {
     console.error("❌ Error in POST /api/analyze:", err);
     return Response.json({ error: err.message || "Internal Server Error" }, { status: 500 });

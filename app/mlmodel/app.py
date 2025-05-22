@@ -3,7 +3,7 @@ import json
 import joblib
 import numpy as np
 import os
-
+from collections import Counter
 # Get absolute path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -13,6 +13,7 @@ models = {
     'svm': joblib.load(os.path.join(BASE_DIR, 'saved_models/svm_model.pkl')),
     'logistic_regression': joblib.load(os.path.join(BASE_DIR, 'saved_models/logistic_regression_model.pkl')),
     'knn': joblib.load(os.path.join(BASE_DIR, 'saved_models/knn_model.pkl')),
+    'gradient_boosting': joblib.load(os.path.join(BASE_DIR, 'saved_models/gradient_boosting_model.pkl')),
 }
 
 # Load MultiLabelBinarizer
@@ -45,6 +46,7 @@ def predict(features):
         input_array = np.array([preprocess(features)])
         results = {}
 
+        votes = {label: [] for label in mlb.classes_}  # To collect predictions from all models
         for model_name, model in models.items():
             pred = model.predict(input_array)
             probabilities = {}
@@ -61,7 +63,7 @@ def predict(features):
                             pos_index = list(classes).index(1)
                             prob_pos = probas[i][0][pos_index]
                         else:
-                            prob_pos = 0.0  # Default to 0% if class 1 not present
+                            prob_pos = 0.0
 
                         probabilities[label] = round(float(prob_pos) * 100, 2)
                 else:
@@ -72,11 +74,24 @@ def predict(features):
                     probabilities[label] = None
 
             labels = mlb.inverse_transform(pred)
+            label_list = labels[0] if labels else []
+
+            # Track votes for majority voting
+            for label in mlb.classes_:
+                votes[label].append(1 if label in label_list else 0)
 
             results[model_name] = {
-                "prediction": labels[0] if labels else [],
+                "prediction": label_list,
                 "probabilities": probabilities
             }
+
+        # Majority vote decision (each class independently)
+        majority_vote = []
+        for label, label_votes in votes.items():
+            if sum(label_votes) > len(label_votes) / 2:
+                majority_vote.append(label)
+
+        results["finalPrediction"] = majority_vote
 
         return results
 
