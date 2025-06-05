@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MaterialsPage from "../materials/page";
 import FeatureImportanceChart from "../FeautureImp/FeatureImportanceChart";
-
+import MaterialsPage from "../materials/MaterialPage";
 export default function ResultsPage() {
   const [loading, setLoading] = useState(true);
   const [finalPrediction, setFinalPrediction] = useState([]);
@@ -141,11 +140,13 @@ export default function ResultsPage() {
           </button>
 
           {/* Feature Importance */}
+          <div className="mb-2">
           <FeatureImportanceChart />
+          </div>
 
           {/* Personalized Materials */}
-          <div>
-            <MaterialsPage />
+          <div className="mt-12">
+          <MaterialsPage finalPrediction={finalPrediction} features={features} />
           </div>
         </>
       )}
