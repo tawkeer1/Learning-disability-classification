@@ -27,11 +27,17 @@ export default function StudentsPage() {
   return (
     <div className="max-w-7xl mx-auto p-6">
       <button
-        className="border p-2 bg-red-500 text-white rounded mb-4"
-        onClick={deleteAllEntries}
-      >
-        Delete all entries
-      </button>
+  className="border p-2 bg-red-500 text-white rounded mb-4"
+  onClick={() => {
+    const confirmed = window.confirm("Are you sure you want to delete all entries?");
+    if (confirmed) {
+      deleteAllEntries();
+    }
+  }}
+>
+  Delete all entries
+</button>
+
 
       <h1 className="text-3xl font-bold mb-6">All Student Test Records</h1>
 
