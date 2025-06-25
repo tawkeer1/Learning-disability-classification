@@ -9,7 +9,10 @@ export function getFeatureImportances() {
   return new Promise((resolve, reject) => {
     const scriptPath = path.join(__dirname, "../mlmodel/app.py"); // same as classifier.js
 
-    const python = spawn("python", [scriptPath, JSON.stringify({ explain: true })]);
+    const python = spawn("C:\\Users\\towqe\\AppData\\Local\\Programs\\Python\\Python311\\python.exe", [
+      scriptPath,
+      JSON.stringify({ explain: true }),
+    ]);
 
     let data = "";
     let error = "";

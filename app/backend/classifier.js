@@ -1,7 +1,7 @@
-import { spawn } from 'child_process';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { spawn } from "child_process";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -9,25 +9,33 @@ const __dirname = dirname(__filename);
 // Main function to call Python script
 export const classifyDisability = (features) => {
   return new Promise((resolve, reject) => {
-    const scriptPath = path.join(__dirname, '../mlmodel/app.py'); // Adjust path if needed
+    const scriptPath = path.join(__dirname, "../mlmodel/app.py"); // Adjust path if needed
 
-    const py = spawn('python', [scriptPath, JSON.stringify(features)]); // or 'python3' if required
+    const py = spawn(
+      "C:\\Users\\towqe\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      [scriptPath, JSON.stringify(features)]
+    ); // or 'python3' if required
 
-    let output = '';
-    let errorOutput = '';
+    let output = "";
+    let errorOutput = "";
 
-    py.stdout.on('data', (data) => {
+    py.stdout.on("data", (data) => {
       output += data.toString();
     });
 
-    py.stderr.on('data', (data) => {
+    py.stderr.on("data", (data) => {
       errorOutput += data.toString();
     });
 
-    py.on('close', (code) => {
+    py.on("close", (code) => {
       if (code !== 0) {
         console.error("Python exited with code:", code);
         console.error("Python error:", errorOutput);
+        console.error("❌ Python stderr:", errorOutput);
+        console.error("❌ Python exited with code:", code);
+console.error("❌ Python stderr:", errorOutput);
+console.error("❌ Python stdout:", output);
+
         reject(new Error("Python script failed"));
       } else {
         try {

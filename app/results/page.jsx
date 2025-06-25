@@ -107,29 +107,44 @@ export default function ResultsPage() {
           </div>
 
           {/* Individual Model Predictions */}
-          {Object.entries(modelPredictions).map(([model, result]) => (
-            <div key={model} className="bg-gray-500 p-4 rounded shadow">
-              <h2 className="text-xl font-semibold">🧠 {model} Model</h2>
-              <p>
-                <strong>Prediction:</strong>{" "}
-                {Array.isArray(result?.prediction) && result.prediction.length > 0
-                  ? result.prediction.join(", ")
-                  : "None"}
-              </p>
-              {result?.probabilities && typeof result.probabilities === "object" && (
-                <>
-                  <h3 className="mt-2 font-semibold">Confidence Scores:</h3>
-                  <ul className="list-disc pl-5">
-                    {Object.entries(result.probabilities).map(([label, prob]) => (
-                      <li key={label}>
-                        {label}: {Number(prob).toFixed(2)}%
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </div>
-          ))}
+{Object.entries(modelPredictions).map(([model, result]) => {
+  const isDL = model.toLowerCase().includes("deep");
+
+  return (
+    <div
+      key={model}
+      className={`p-4 rounded shadow ${
+        isDL ? "bg-purple-600" : "bg-gray-500"
+      }`}
+    >
+      <h2 className="text-xl font-semibold">
+        {isDL ? "🧠⚡ Deep Learning Model" : `🧠 ${model} Model`}
+      </h2>
+      <p>
+        <strong>Prediction:</strong>{" "}
+        {Array.isArray(result?.prediction) && result.prediction.length > 0
+          ? result.prediction.join(", ")
+          : "None"}
+      </p>
+
+      {result?.probabilities && typeof result.probabilities === "object" && (
+        <>
+          <h3 className="mt-2 font-semibold">Confidence Scores:</h3>
+          <ul className="list-disc pl-5">
+            {Object.entries(result.probabilities).map(([label, prob]) => (
+              <li key={label}>
+                {label}: {typeof prob === "number"
+                  ? `${(prob * 100).toFixed(2)}%`
+                  : prob}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  );
+})}
+
 
           {/* Retake Button */}
           <button

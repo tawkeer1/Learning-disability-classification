@@ -7,24 +7,28 @@ export async function POST(req) {
     const { studentInfo, features } = await req.json();
 
     await connectDB();
-    console.log(features);
 
-    // Get predictions from Python script
-    const { finalPrediction, ...predictions } = await classifyDisability(features);
-    console.log(predictions);
+    // 🔍 Get predictions from Python script
+    const { finalPrediction, deep_learning, ...otherModels } = await classifyDisability(features);
 
     // Save everything in MongoDB
     const testRecord = new TestResult({
       studentInfo,
       features,
-      predictions, // Save full predictions
-      finalPrediction
+      predictions: {
+        ...otherModels,
+        deep_learning
+      },
+      finalPrediction,
     });
 
     await testRecord.save();
 
-      return Response.json({
-      predictions,
+    return Response.json({
+      predictions: {
+        ...otherModels,
+        deep_learning
+      },
       finalPrediction,
       results: testRecord,
     });
