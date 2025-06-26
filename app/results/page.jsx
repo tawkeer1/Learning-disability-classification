@@ -134,7 +134,7 @@ export default function ResultsPage() {
             {Object.entries(result.probabilities).map(([label, prob]) => (
               <li key={label}>
                 {label}: {typeof prob === "number"
-                  ? `${(prob * 100).toFixed(2)}%`
+                  ? `${(prob).toFixed(2)}%`
                   : prob}
               </li>
             ))}
