@@ -94,7 +94,7 @@ def run_prediction(input_json):
         **predictions
     }
 
-# ✅ CLI entrypoint
+# ✅ CLI entrypoint (used by Node.js via spawn or for testing)
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(json.dumps({"error": "No input JSON provided."}))
