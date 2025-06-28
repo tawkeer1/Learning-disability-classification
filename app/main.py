@@ -1,23 +1,23 @@
-from fastapi import FastAPI, Request
+import os
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mlmodel.app import run_prediction
 
 app = FastAPI()
 
-# Optional: Allow CORS for Vercel frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can restrict to your frontend domain in production
-    allow_credentials=True,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 @app.post("/predict")
-async def predict(request: Request):
-    try:
-        input_json = await request.json()
-        result = run_prediction(input_json)
-        return result
-    except Exception as e:
-        return {"error": f"Server error: {str(e)}"}
+def predict_endpoint(data: dict):
+    return run_prediction(data)
+
+# Run only when executed directly (not during import)
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 10000))  # Render will provide this
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
