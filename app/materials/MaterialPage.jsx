@@ -9,24 +9,30 @@ const MaterialsPage = ({ finalPrediction, features }) => {
   if (!recommendations.length) return null;
 
   return (
-    <div className="bg-blue-500 p-4 rounded shadow">
-      <h2 className="text-xl font-semibold mb-2">📘 Personalized Recommendations</h2>
-      <ul className="space-y-2">
+    <div className="bg-gray-400 p-6 rounded-xl shadow-md space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800">📘 Personalized Recommendations</h2>
+      <p className="text-dark-900">Based on your performance we recommend you to visit following</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {recommendations.map((rec, index) => (
-          <li key={index} className="border-l-4 border-blue-400 pl-3">
-            <p className="font-semibold">{rec.title}</p>
-            <p className="text-sm">{rec.desc}</p>
+          <div
+            key={index}
+            className="bg-blue-50 border border-blue-200 rounded-xl shadow hover:shadow-lg transition-shadow p-4 flex flex-col justify-between"
+          >
+            <div>
+              <h3 className="text-lg font-semibold text-blue-800 mb-1">{rec.title}</h3>
+              <p className="text-sm text-gray-700 mb-3">{rec.desc}</p>
+            </div>
             <a
               href={rec.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-700 underline text-sm"
+              className="mt-auto text-blue-600 hover:text-blue-800 text-sm font-medium underline"
             >
-              Visit Resource
+              Visit Resource →
             </a>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

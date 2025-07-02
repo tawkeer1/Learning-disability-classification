@@ -1,7 +1,7 @@
 export function getRecommendations(finalPrediction, features) {
     const recommendations = [];
   
-    if (finalPrediction.includes("ADHD")) {
+    if (finalPrediction.includes("Adhd")) {
       if (features["Attention Span"] < 50) {
         recommendations.push({
           title: "Focus-building Games",

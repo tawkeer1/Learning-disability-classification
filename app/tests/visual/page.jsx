@@ -56,7 +56,7 @@ export default function VisualTest() {
                 key={index}
                 onClick={() => setSelected(opt)}
                 className={`block w-full text-left px-4 py-2 rounded border ${
-                  selected === opt ? 'bg-blue-100 border-blue-500' : 'border-gray-300'
+                  selected === opt ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
                 }`}
               >
                 {opt}

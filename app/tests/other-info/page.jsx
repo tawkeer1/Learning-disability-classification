@@ -22,7 +22,7 @@ export default function OtherInfoTest() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+    <div className="max-w-xl mx-auto p-6 bg-gray-500 shadow-lg rounded-lg mt-10">
       <h1 className="text-2xl font-bold mb-6 text-center">Other Information</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
 
@@ -30,7 +30,7 @@ export default function OtherInfoTest() {
         <div>
           <label className="block text-lg font-medium mb-2">Gender</label>
           <select
-            className="w-full border p-2 rounded"
+            className="w-full  border p-2 rounded"
             value={gender}
             onChange={(e) => setGender(e.target.value)}
             required

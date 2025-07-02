@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import FeatureImportanceChart from "../FeautureImp/FeatureImportanceChart";
+
 import MaterialsPage from "../materials/MaterialPage";
+import ModelComparisonChart from "../chartcomparsion/ModelComparisonChart";
+import FeatureImportanceChart from "../FeautureImp/FeatureImportanceChart";
 export default function ResultsPage() {
   const [loading, setLoading] = useState(true);
   const [finalPrediction, setFinalPrediction] = useState([]);
@@ -78,7 +80,7 @@ export default function ResultsPage() {
       {!loading && !error && (
         <>
           {/* Student Info */}
-          <div className="bg-gray-500 p-4 rounded shadow">
+          <div className="bg-gray-800 p-4 rounded shadow">
             <h2 className="text-xl font-semibold">👤 Student Info</h2>
             <p><strong>Name:</strong> {studentInfo.name}</p>
             <p><strong>Enrollment No:</strong> {studentInfo.enroll}</p>
@@ -86,7 +88,7 @@ export default function ResultsPage() {
           </div>
 
           {/* Features */}
-          <div className="bg-gray-500 p-4 rounded shadow">
+          <div className="bg-gray-800 p-4 rounded shadow">
             <h2 className="text-xl font-semibold">📊 Test Scores & Info</h2>
             <ul className="list-disc pl-5 space-y-1">
               {Object.entries(features).map(([key, value]) => (
@@ -98,13 +100,6 @@ export default function ResultsPage() {
           </div>
 
           {/* Final Prediction */}
-          <div className="bg-green-500 p-4 rounded shadow">
-            <h2 className="text-xl font-semibold">✅ Final Prediction</h2>
-            <p>
-              <strong>Result:</strong>{" "}
-              {finalPrediction.length > 0 ? finalPrediction.join(", ") : "None"}
-            </p>
-          </div>
 
           {/* Individual Model Predictions */}
 {Object.entries(modelPredictions).map(([model, result]) => {
@@ -114,11 +109,11 @@ export default function ResultsPage() {
     <div
       key={model}
       className={`p-4 rounded shadow ${
-        isDL ? "bg-purple-600" : "bg-gray-500"
+        isDL ? "bg-purple-600" : "bg-blue-500"
       }`}
     >
       <h2 className="text-xl font-semibold">
-        {isDL ? "🧠⚡ Deep Learning Model" : `🧠 ${model} Model`}
+        {isDL ? " Deep Learning Model" : `${model} Model`}
       </h2>
       <p>
         <strong>Prediction:</strong>{" "}
@@ -144,8 +139,17 @@ export default function ResultsPage() {
     </div>
   );
 })}
+          <div className="bg-green-500 p-4 rounded shadow">
+            <h2 className="text-xl font-semibold">✅ Final Prediction</h2>
+            <p>
+              <strong>Result:</strong>{" "}
+              {finalPrediction.length > 0 ? finalPrediction.join(", ") : "None"}
+            </p>
+          </div>
 
-
+          <div className="mt-6">
+  <ModelComparisonChart modelPredictions={modelPredictions} />
+            </div>
           {/* Retake Button */}
           <button
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mt-4"
